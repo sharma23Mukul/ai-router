@@ -138,6 +138,31 @@ app.get('/health', (req, res) => {
 });
 
 // ────────────────────────────────────────────
+// Readiness endpoint
+// ────────────────────────────────────────────
+app.get('/ready', (req, res) => {
+    try {
+        // 1. Verify database is responsive
+        db.prepare('SELECT 1').get();
+
+        // 2. Verify ONNX model is loaded
+        if (!isOnnxReady()) {
+            return res.status(503).json({ ready: false, reason: 'ONNX model classifier not loaded' });
+        }
+
+        // 3. Verify server startup flag
+        if (!isReady) {
+            return res.status(503).json({ ready: false, reason: 'Server starting' });
+        }
+
+        res.status(200).json({ ready: true, status: 'ready' });
+    } catch (err) {
+        logger.error({ err: err.message }, 'Readiness probe failed');
+        res.status(503).json({ ready: false, reason: 'Database or critical subsystem failure' });
+    }
+});
+
+// ────────────────────────────────────────────
 // Main proxy endpoint — OpenAI-compatible
 // ────────────────────────────────────────────
 app.post('/v1/chat/completions', async (req, res) => {
