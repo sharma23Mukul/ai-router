@@ -21,7 +21,7 @@ validateEnv();
 const express = require('express');
 const cors = require('cors');
 const { v4: uuidv4 } = require('uuid');
-const pino = require('pino');
+const { createLogger } = require('./utils/logger');
 
 // ────────────────────────────────────────────
 // Core services
@@ -52,13 +52,7 @@ const modelsConfig = require('./models/models.json');
 // ────────────────────────────────────────────
 // Logger
 // ────────────────────────────────────────────
-const logger = pino({
-    name: 'frugal-router',
-    level: process.env.LOG_LEVEL || 'info',
-    transport: process.env.NODE_ENV !== 'production'
-        ? { target: 'pino-pretty', options: { colorize: true } }
-        : undefined
-});
+const logger = createLogger('frugal-router');
 
 // ────────────────────────────────────────────
 // Initialize services
