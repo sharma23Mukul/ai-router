@@ -8,8 +8,8 @@
  * Uses exponential backoff for cooldown in OPEN state.
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'circuit-breaker' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('circuit-breaker');
 
 const STATES = {
     CLOSED: 'CLOSED',

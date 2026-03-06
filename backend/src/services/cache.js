@@ -9,8 +9,8 @@
  */
 
 const crypto = require('crypto');
-const pino = require('pino');
-const logger = pino({ name: 'cache' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('cache');
 
 class SemanticCache {
     constructor(options = {}) {

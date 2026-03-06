@@ -1,8 +1,8 @@
 const Database = require('better-sqlite3');
 const path = require('path');
-const pino = require('pino');
+const { createLogger } = require('../utils/logger');
 
-const logger = pino({ name: 'database' });
+const logger = createLogger('database');
 const dbPath = path.resolve(__dirname, '../../frugal_router.db');
 
 let db;
