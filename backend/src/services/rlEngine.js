@@ -12,8 +12,8 @@
  *   - 10-minute rolling normalization window with min/max clamp
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'rl-engine' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('rl-engine');
 
 class RLEngine {
     constructor(modelIds, options = {}) {

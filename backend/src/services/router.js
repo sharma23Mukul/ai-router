@@ -15,8 +15,8 @@
  */
 
 const models = require('../models/models.json');
-const pino = require('pino');
-const logger = pino({ name: 'router' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('router');
 
 // ────────────────────────────────────────────
 // Strategy weight profiles

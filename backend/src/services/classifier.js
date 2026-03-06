@@ -9,8 +9,8 @@
  *   intent: 'qa' | 'code' | 'creative' | 'analysis' | 'translation' | 'math' | 'general'
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'classifier' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('classifier');
 
 // ────────────────────────────────────────────
 // TIERS: 5-level complexity scale

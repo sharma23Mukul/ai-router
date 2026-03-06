@@ -6,8 +6,8 @@
  * Updates model_health table in DB.
  */
 
-const pino = require('pino');
-const logger = pino({ name: 'benchmarker' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('benchmarker');
 
 class Benchmarker {
     constructor(db) {

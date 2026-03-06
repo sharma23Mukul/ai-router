@@ -8,8 +8,8 @@
 
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
-const pino = require('pino');
-const logger = pino({ name: 'tenant-manager' });
+const { createLogger } = require('../utils/logger');
+const logger = createLogger('tenant-manager');
 
 class TenantManager {
     constructor(db) {
