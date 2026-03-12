@@ -403,7 +403,13 @@ async function handleStreamingRequest(req, res, ctx) {
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Request-Id', requestId);
+    res.setHeader('X-Accel-Buffering', 'no'); // Disable NGINX buffering
     res.flushHeaders();
+
+    // Keep-alive heartbeat
+    const heartbeat = setInterval(() => {
+        if (!aborted) res.write(': keepalive\\n\\n');
+    }, 15000);
 
     let aborted = false;
     let providerStream = null;
@@ -415,6 +421,7 @@ async function handleStreamingRequest(req, res, ctx) {
             providerStream.destroy();
         }
         logger.debug({ requestId }, 'Client disconnected during stream');
+        clearInterval(heartbeat);
     });
 
     try {
@@ -436,6 +443,7 @@ async function handleStreamingRequest(req, res, ctx) {
         providerStream.on('end', () => {
             if (!aborted) {
                 res.end();
+                clearInterval(heartbeat);
             }
 
             const totalLatency = Date.now() - startTime;
@@ -467,6 +475,7 @@ async function handleStreamingRequest(req, res, ctx) {
             if (!aborted) {
                 res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
                 res.end();
+                clearInterval(heartbeat);
             }
             breaker.recordResult(false, Date.now() - startTime);
             benchmarker.record(selectedModel.id, Date.now() - startTime, false);
@@ -479,6 +488,7 @@ async function handleStreamingRequest(req, res, ctx) {
         if (!aborted) {
             res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
             res.end();
+                clearInterval(heartbeat);
         }
     }
 }
