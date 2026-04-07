@@ -1,0 +1,1 @@
+export default function ModelCompare() { return null; }
